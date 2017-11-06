@@ -12,7 +12,7 @@ namespace Ittech24.OAuth
             var sorted = new SortedDictionary<string, string>();
             foreach (var kvp in parameters)
             {
-                sorted.Add(kvp.Key, Uri.UnescapeDataString(kvp.Value));
+                sorted.Add(kvp.Key, kvp.Value);
             }
             StringBuilder sb = new StringBuilder();
             int i = 0;

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Net;
 using System.Net.Http;
 
 namespace Ittech24.OAuth
@@ -28,10 +29,14 @@ namespace Ittech24.OAuth
         HttpMethod HttpMethod { get; }
         Uri AbsoluteUrl { get; }
         TokenException Exception { get; }
+        HttpStatusCode StatusCode { get; }
+        bool IsSuccess { get; }
         IDictionary<string,string> Parameters { get; }
         IDictionary<string,string> Query { get; }
+
         void SaveToFile();
         void LoadFromFile();
         void Sign();
+        void Duplicate(Token token);
     }
 }

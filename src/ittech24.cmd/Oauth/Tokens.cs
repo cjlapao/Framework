@@ -55,16 +55,44 @@ namespace ittech24.cmd
 
         public async Task<Token> Get()
         {
+            Token test = new Token();
+            test.Duplicate(requestToken);
             var token = new Token
             {
                 ConsumerKey = requestToken.ConsumerKey,
                 ConsumerSecret = requestToken.ConsumerSecret,
                 AccessToken = requestToken.AccessToken,
                 AccessTokenSecret = requestToken.AccessTokenSecret,
-                Url = url
+                Url = url,
+                Callback = requestToken.Callback
             };
             token.Sign();
             var access = new Ittech24.OAuth.AuthorizationToken(token);
+            return await access.SendAsync();
+        }
+    }
+
+    public class AccessToken
+    {
+        private Token requestToken;
+        private Uri url;
+        private string verifier;
+
+        public AccessToken(Token token, string url, string verifier)
+        {
+            requestToken = token;
+            this.url = new Uri(url);
+            this.verifier = verifier;
+        }
+
+        public async Task<Token> Get()
+        {
+            var token = new Token();
+            token.Duplicate(requestToken);
+            token.Url = url;
+            token.Verifier = verifier;
+            token.Sign();
+            var access = new Ittech24.OAuth.AccessToken(token);
             return await access.SendAsync();
         }
     }

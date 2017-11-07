@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Net;
 using System.Net.Http;
 using Ittech24.Extensions;
+using System.Reflection;
 
 namespace Ittech24.OAuth
 {
@@ -19,6 +21,8 @@ namespace Ittech24.OAuth
         private IDictionary<string, string> _parameters;
         private string _callback;
         private Uri _absoluteUrl;
+        private HttpStatusCode _statusCode;
+        private bool _isSuccess = false;
 
         public Token()
         {
@@ -180,6 +184,21 @@ namespace Ittech24.OAuth
 
         public TokenException Exception { get; set; }
 
+        public HttpStatusCode StatusCode
+        {
+            get { return _statusCode; }
+            set
+            {
+                _statusCode = value;
+                if(_statusCode == HttpStatusCode.OK)
+                {
+                    _isSuccess = true;
+                }
+            }
+        }
+
+        public bool IsSuccess => _isSuccess;
+
         public string Callback
         {
             get { return _callback; }
@@ -188,8 +207,19 @@ namespace Ittech24.OAuth
                 _callback = value;
                 if (!string.IsNullOrEmpty(_callback))
                 {
-                    Parameters.Append("oauth_callback",Uri.EscapeDataString(_callback));
+                    Parameters.Append("oauth_callback", Uri.EscapeDataString(_callback));
                 }
+            }
+        }
+
+        public void Duplicate(Token token)
+        {
+            if(token != null)
+            {
+                this.CopyFrom(token);
+                CreatedOn = DateTime.Now;
+                Timestamp = DateTimeUtils.Timestamp().ToString();
+                Nonce = StringUtils.Nonce();
             }
         }
 

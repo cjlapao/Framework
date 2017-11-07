@@ -51,15 +51,57 @@ namespace ittech24.cmd
                     var authToken = auth.Get().Result;
                     if(authToken.Exception == null)
                     {
-                        if(requestToken.Callback == null)
-                        {
-                            Console.Write("Authorization Url:" + authToken.AuthorizationUrl);
-                        }
-                        else
-                        {
-                            Console.Write("oauth_token: " + authToken.AccessToken);
-                            Console.Write("oauth_token_secret: " + authToken.AccessTokenSecret);
-                        }
+                        Console.Write("authorization_url:" + authToken.AuthorizationUrl + "\r\n");
+                        Console.Write("oauth_token: " + authToken.AccessToken + "\r\n");
+                        Console.Write("oauth_token_secret: " + authToken.AccessTokenSecret + "\r\n");
+                    }
+                    else
+                    {
+                        Console.Write("error retrieving the token");
+                    }
+                }
+            }
+            else if (commands.Contains("accesstoken"))
+            {
+                var parameters = ReadParameters(args);
+                if (!parameters.ContainsKey("consumerkey"))
+                {
+                    Console.Write("Please provide the consumer key");
+                }
+                else if (!parameters.ContainsKey("consumersecret"))
+                {
+                    Console.Write("Please provide the consumer secret");
+                }
+                if (!parameters.ContainsKey("accesstoken"))
+                {
+                    Console.Write("Please provide the access token");
+                }
+                else if (!parameters.ContainsKey("accesstokensecret"))
+                {
+                    Console.Write("Please provide the access token secret");
+                }
+                else if (!parameters.ContainsKey("verifier"))
+                {
+                    Console.Write("Please provide the verifier code");
+                }
+                else if (!parameters.ContainsKey("accessurl"))
+                {
+                    Console.Write("Please provide the access Url");
+                }
+                else
+                {
+                    var token = new Token
+                    {
+                        ConsumerKey = parameters["consumerkey"],
+                        ConsumerSecret = parameters["consumersecret"],
+                        AccessToken = parameters["accesstoken"],
+                        AccessTokenSecret = parameters["accesstokensecret"],
+                    };
+                    var authToken = new AccessToken(token,parameters["accessurl"],parameters["verifier"]).Get().Result;
+                    if (authToken.Exception == null)
+                    {
+                        Console.Write("oauth_token: " + authToken.AccessToken);
+                        Console.Write("oauth_token_secret: " + authToken.AccessTokenSecret);
                     }
                     else
                     {

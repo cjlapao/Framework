@@ -24,34 +24,15 @@ namespace Ittech24.OAuth
         public async Task<Token> SendAsync()
         {
             _token = new Token();
+            _token.Duplicate(_requestToken);
+            _token.HttpMethod = HttpMethod.Post;
             var client = new HttpClient();
-            var message = new HttpRequestMessage(_requestToken.HttpMethod, _requestToken.Url);
-            message.Headers.OAuthAuthentication(_requestToken);
+            var message = new HttpRequestMessage(_token.HttpMethod, new Uri($"{_token.Url.AbsoluteUri}?oauth_token={_token.AccessToken}"));
             var response = await client.SendAsync(message);
+            _token.StatusCode = response.StatusCode;
             if (response.IsSuccessStatusCode)
             {
-                if(_requestToken.Callback != null)
-                {
-                    _token.ConsumerKey = _requestToken.ConsumerKey;
-                    _token.ConsumerSecret = _requestToken.ConsumerSecret;
-                    var str = await response.Content.ReadAsStringAsync();
-                    var parameters = str.SplitParameters();
-                    if (parameters.Count > 0)
-                    {
-                        if (parameters.ContainsKey("oauth_token"))
-                        {
-                            _token.AccessToken = parameters["oauth_token"];
-                            _token.AccessTokenSecret = parameters["oauth_token_secret"];
-                        }
-                    }
-                }
-                else
-                {
-                    if(response.RequestMessage.RequestUri != null)
-                    {
-                        _token.AuthorizationUrl = response.RequestMessage.RequestUri;
-                    }
-                }
+                _token.AuthorizationUrl = response.RequestMessage.RequestUri;
             }
             else
             {

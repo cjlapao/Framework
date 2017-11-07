@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Reflection;
 
 namespace Ittech24.Extensions
 {
@@ -46,6 +47,23 @@ namespace Ittech24.Extensions
                 }
             }
             return result;
+        }
+
+        public static void CopyFrom(this object copy, object original)
+        {
+            if (original != null)
+            {
+                if(original.GetType() == copy.GetType())
+                {
+                    foreach (PropertyInfo prop in original.GetType().GetProperties())
+                    {
+                        if (prop.CanWrite)
+                        {
+                            copy.GetType().GetProperty(prop.Name).SetValue(copy, prop.GetValue(original));
+                        }
+                    }
+                }
+            }
         }
     }
 }

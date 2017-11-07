@@ -2,7 +2,7 @@
   "profiles": {
     "ittech24.cmd": {
       "commandName": "Project",
-      "commandLineArgs": "authtoken consumerkey=BKHOB9YKZCA7DNWA0BC3XA2BT3SEWY consumersecret=OELRFOXTIAON5P7L8KMK6WMURZWZ7K url=https://api.xero.com/oauth/RequestToken authurl=https://api.xero.com/oauth/Authorization callback=http://localhost"
+      "commandLineArgs": "accesstoken consumerkey=F5TINCDEA8ZAKPGTFLSCPWGNAHIKZH consumersecret=DCCFZRXU7CWAOJITBRHMASLBLAFXVJ accesstoken=RGVNBQPQHF57VDKQYSI9JXKQMAOMWF accesstokensecret=QLMCDERPXUX18UMRCWZM2LFR5SUICN accessurl=https://api.xero.com/oauth/AccessToken verifier=3405009"
     }
   }
 }

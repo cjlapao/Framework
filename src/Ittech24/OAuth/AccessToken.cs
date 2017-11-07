@@ -1,10 +1,13 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Collections.Generic;
+using System.Text;
+using System.Threading.Tasks;
 using System.Net.Http;
 using Ittech24.Extensions;
 
 namespace Ittech24.OAuth
 {
-    public class RequestToken: IOAuthToken
+    public class AccessToken
     {
         private Token _requestToken;
         private Token _token;
@@ -13,7 +16,7 @@ namespace Ittech24.OAuth
 
         public Token Response => _token;
 
-        public RequestToken(Token token)
+        public AccessToken(Token token)
         {
             _requestToken = token;
         }
@@ -21,19 +24,19 @@ namespace Ittech24.OAuth
         public async Task<Token> SendAsync()
         {
             _token = new Token();
+            _token.Duplicate(_requestToken);
+            _token.HttpMethod = HttpMethod.Post;
+            _token.Sign();
             var client = new HttpClient();
-            var message = new HttpRequestMessage(_requestToken.HttpMethod, _requestToken.AbsoluteUrl);
-            message.Headers.OAuthAuthentication(_requestToken);
+            var message = new HttpRequestMessage(_token.HttpMethod, _token.AbsoluteUrl);
+            message.Headers.OAuthAuthentication(_token);
             var response = await client.SendAsync(message);
             _token.StatusCode = response.StatusCode;
             if (response.IsSuccessStatusCode)
             {
-                _token.ConsumerKey = _requestToken.ConsumerKey;
-                _token.ConsumerSecret = _requestToken.ConsumerSecret;
-                _token.Callback = _requestToken.Callback;
                 var str = await response.Content.ReadAsStringAsync();
                 var parameters = str.SplitParameters();
-                if(parameters.Count > 0)
+                if (parameters.Count > 0)
                 {
                     if (parameters.ContainsKey("oauth_token"))
                     {
@@ -47,6 +50,7 @@ namespace Ittech24.OAuth
                 _token.Exception = new TokenException(response);
             }
             return _token;
+
         }
     }
 }

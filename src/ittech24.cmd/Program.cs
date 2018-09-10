@@ -7,6 +7,7 @@ using System.Security.Cryptography;
 using System.Text;
 using Newtonsoft.Json;
 using static System.Console;
+using Ittech24.Identity.JWT;
 
 namespace ittech24.cmd
 {
@@ -242,6 +243,13 @@ namespace ittech24.cmd
                 name = "Test44444",
                 iat = "54321"
             };
+            JoseHeader heade = new JoseHeader
+            {
+                Algorithm = "HS512",
+                Type = "JWT"
+            };
+            string test = JsonConvert.SerializeObject(heade);
+            WriteLine($"test: {test}");
             string dataJson = JsonConvert.SerializeObject(data);
             string joseBase64 = joseJson.Base64UrlEncode();
             WriteLine($"Base64 JOSE: {joseBase64}");

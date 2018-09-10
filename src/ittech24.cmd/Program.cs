@@ -3,6 +3,10 @@ using System.Collections.Generic;
 using System.Net.Http;
 using Ittech24.OAuth;
 using Ittech24.Extensions;
+using System.Security.Cryptography;
+using System.Text;
+using Newtonsoft.Json;
+using static System.Console;
 
 namespace ittech24.cmd
 {
@@ -10,7 +14,8 @@ namespace ittech24.cmd
     {
         static void Main(string[] args)
         {
-
+            GenerateJWS(string.Empty);
+            ReadLine();
             var commands = ReadCommands(args);
             if (commands.Contains("sign"))
             {
@@ -19,6 +24,10 @@ namespace ittech24.cmd
             else if (commands.Contains("gettoken"))
             {
                 GetToken(args);
+            }
+            else if (commands.Contains("jwt"))
+            {
+                GenerateJWS(string.Empty);
             }
             else if (commands.Contains("authtoken"))
             {
@@ -219,6 +228,37 @@ namespace ittech24.cmd
                     Console.Write("Error getting token: "+str);
                 }
             }
+        }
+
+        static void GenerateJWS(string body)
+        {
+            string alg = "HS512";
+            string typ = "JWT";
+            var jose = new { alg, typ };
+            string joseJson = JsonConvert.SerializeObject(jose);
+            var data = new
+            {
+                sub = "12345",
+                name = "Test44444",
+                iat = "54321"
+            };
+            string dataJson = JsonConvert.SerializeObject(data);
+            string joseBase64 = joseJson.Base64UrlEncode();
+            WriteLine($"Base64 JOSE: {joseBase64}");
+            string dataBase64 = dataJson.Base64UrlEncode();
+            WriteLine($"Base64 Data: {dataBase64}");
+            string payload = joseBase64 + "." + dataBase64;
+            WriteLine($"Payload: {payload}");
+            byte[] payloadBytes = Encoding.UTF8.GetBytes(payload);
+            HMACSHA512 crypto = new HMACSHA512(Encoding.Default.GetBytes("TestKey"));
+            byte[] signDataBytes = crypto.ComputeHash(payloadBytes);
+            string signData = Encoding.UTF8.GetString(signDataBytes);
+            WriteLine($"SignData: {signData}");
+            string signDataBase64 = signDataBytes.Base64UrlEncode();
+            WriteLine($"SignDataBase64: {signDataBase64}");
+            string token = payload + "." + signDataBase64;
+            WriteLine($"Token: {token}");
+            Console.ReadLine();
         }
     }
 }

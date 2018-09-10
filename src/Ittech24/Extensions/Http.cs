@@ -46,5 +46,19 @@ namespace Ittech24.Extensions
             sb.Append($",oauth_signature=\"{Uri.EscapeDataString(token.Signature)}\"");
             headers.Add("Authorization", sb.ToString());
         }
+
+        public static string Base64UrlEncode(this string input)
+        {
+            byte[] inputBytes = Encoding.UTF8.GetBytes(input);
+            return inputBytes.Base64UrlEncode();
+        }
+
+        public static string Base64UrlEncode(this byte[] bytes)
+        {
+            return Convert.ToBase64String(bytes)
+                .Replace('+', '-')
+                .Replace('/', '_')
+                .Replace("=", "");
+        }
     }
 }

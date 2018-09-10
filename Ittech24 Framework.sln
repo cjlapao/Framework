@@ -7,7 +7,12 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Ittech24", "src\Ittech24\It
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ittech24.tests", "tests\ittech24.tests\ittech24.tests.csproj", "{19F5F9D1-8009-4272-BF46-26C630DFD646}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ittech24.cmd", "src\ittech24.cmd\ittech24.cmd.csproj", "{9C0D365D-AB85-4E03-8C8F-CF6D44A64F39}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ittech24.cmd", "src\ittech24.cmd\ittech24.cmd.csproj", "{9C0D365D-AB85-4E03-8C8F-CF6D44A64F39}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{B729CDDD-D7AA-418C-A07A-96685135A8C9}"
+	ProjectSection(SolutionItems) = preProject
+		readme.md = readme.md
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

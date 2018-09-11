@@ -35,7 +35,7 @@ namespace Ittech24.Identity.JWT
             }
             // byte[] test 
             // using
-            Certificate = new X509Certificate2()
+            Certificate = new X509Certificate2();
         }
 
         private JoseHeader BuildJoseHeader(bool generateKeyID = true){

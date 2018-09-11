@@ -245,10 +245,10 @@ namespace ittech24.cmd
             };
             JoseHeader heade = new JoseHeader
             {
-                Algorithm = "HS512",
-                Type = "JWT"
+                Algorithm = JWTAlgorithm.HS512,
+                Type = JWTType.JWS
             };
-            string test = JsonConvert.SerializeObject(heade);
+            string test = heade.ToJson();
             WriteLine($"test: {test}");
             string dataJson = JsonConvert.SerializeObject(data);
             string joseBase64 = joseJson.Base64UrlEncode();
@@ -266,6 +266,37 @@ namespace ittech24.cmd
             WriteLine($"SignDataBase64: {signDataBase64}");
             string token = payload + "." + signDataBase64;
             WriteLine($"Token: {token}");
+            JWTClaim claim = new JWTClaim
+            {
+                Audience = "Test1",
+                JWTId = Guid.NewGuid().ToString(),
+                IssuedAt = (int)DateTimeExtensions.Timestamp(DateTime.Now)
+            };
+            claim.ExtraProperties.Add("https://test.aptbacs.co.uk", "testing");
+            string claimJson = claim.ToJson();
+            WriteLine($"claim example: { claimJson}");
+            WriteLine("***** Using Tokens *****");
+            JWToken jwt = new JWToken();
+            JWTClaim jwtclaim = new JWTClaim
+            {
+                Subject = "1234567890",
+                Expiration = 1516239022,
+            };
+            jwtclaim.ExtraProperties.Add("name", "John Doe");
+            jwtclaim.ExtraProperties.Add("Address", "Crawley");
+            jwt.Payload = jwtclaim;
+            jwt.Key = "TestKey";
+            jwt.Sign(JWTAlgorithm.HS384);
+            WriteLine($"Token: {jwt.Token}");
+            jwt.Verify();
+            JWToken testToken = new JWToken();
+            Write("Please type in token: ");
+            testToken.Token = ReadLine();
+            WriteLine();
+            Write("Please type in Password for token: ");
+            testToken.Key = ReadLine();
+            WriteLine($"Result: {testToken.Verify()}");
+
             Console.ReadLine();
         }
     }

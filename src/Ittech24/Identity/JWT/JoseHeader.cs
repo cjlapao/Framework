@@ -13,5 +13,7 @@ namespace Ittech24.Identity.JWT
         public string Algorithm { get; set; }
         [DataMember(Name = "typ")]
         public string Type { get; set; }
+        [DataMember(Name = "kid")]
+        public string KeyId {get;set;}
     }
 }

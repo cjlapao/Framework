@@ -6,7 +6,7 @@ using System.Runtime.Serialization;
 using Newtonsoft.Json;
 using Ittech24.Extensions;
 
-namespace Ittech24.Identity.JWT
+namespace Ittech24.Identity.JsonWebToken
 {
     [DataContract]
     public class JoseHeader
@@ -43,19 +43,27 @@ namespace Ittech24.Identity.JWT
         [DataMember(Name = "kid", Order = 3)]
         public string KeyId {get;set;}
         public JWTType ContentType { get; set; }
-        public virtual string ToJson()
+
+        public string ToJson()
         {
-            return JsonConvert.SerializeObject(this,
-                new JsonSerializerSettings
-                {
-                    NullValueHandling = NullValueHandling.Ignore,
-                    DefaultValueHandling = DefaultValueHandling.Ignore
-                });
+            IJsonSerializer jsonSerializer = new DefaultJsonSerializer();
+            return jsonSerializer.Serialize(this);
         }
 
-        public virtual string ToBase64UrlEncode()
+        public string Encode()
         {
             return ToJson().Base64UrlEncode();
+        }
+
+        public static void TryParse(string input, out JoseHeader joseHeader)
+        {
+            joseHeader = null;
+            IJsonSerializer jsonSerializer = new DefaultJsonSerializer();
+            try
+            {
+                joseHeader = jsonSerializer.Deserialize<JoseHeader>(input);
+            }
+            catch { }
         }
     }
 }

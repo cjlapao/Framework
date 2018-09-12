@@ -1,6 +1,7 @@
-using System;
+using Ittech24.Extensions;
 
-namespace Ittech24.Identity.JWT{
+namespace Ittech24.Identity.JsonWebToken
+{
     public enum JWTAlgorithm {
         Empty,
         none,
@@ -16,5 +17,11 @@ namespace Ittech24.Identity.JWT{
         JWS,
         JWE,
         JWT
+    }
+
+    public static class JsonWebTokenExtensions
+    {
+
+
     }
 }

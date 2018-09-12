@@ -5,13 +5,13 @@ using System.Runtime.Serialization;
 using Ittech24.Extensions;
 using Newtonsoft.Json;
 
-namespace Ittech24.Identity.JWT
+namespace Ittech24.Identity.JsonWebToken
 {
     [DataContract]
-    public class JWTClaim
+    public class JsonWebTokenClaim
     {
         [DataMember(Name = "jti")]
-        public string JWTId { get; set; }
+        public string JsonWebTokenId { get; set; }
         [DataMember(Name = "iss")]
         public string Issuer { get; set; }
         [DataMember(Name = "sub")]
@@ -27,20 +27,26 @@ namespace Ittech24.Identity.JWT
         [JsonExtensionData]
         public Dictionary<string, object> ExtraProperties { get; set; } = new Dictionary<string, object>();
 
-        public virtual string ToJson()
+        public string ToJson()
         {
-            return JsonConvert.SerializeObject(this, 
-                new JsonSerializerSettings
-                {
-                    NullValueHandling = NullValueHandling.Ignore,
-                    DefaultValueHandling = DefaultValueHandling.Ignore
-                });
+            IJsonSerializer jsonSerializer = new DefaultJsonSerializer();
+            return jsonSerializer.Serialize(this);
         }
 
-        public virtual string ToBase64UrlEncode()
+        public string Encode()
         {
-            var test = ToJson();
             return ToJson().Base64UrlEncode();
+        }
+
+        public static void TryParse(string input, out JsonWebTokenClaim claim)
+        {
+            claim = null;
+            IJsonSerializer jsonSerializer = new DefaultJsonSerializer();
+            try
+            {
+                claim = jsonSerializer.Deserialize<JsonWebTokenClaim>(input);
+            }
+            catch { }
         }
     }
 }

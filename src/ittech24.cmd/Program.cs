@@ -7,7 +7,7 @@ using System.Security.Cryptography;
 using System.Text;
 using Newtonsoft.Json;
 using static System.Console;
-using Ittech24.Identity.JWT;
+using Ittech24.Identity.JsonWebToken;
 
 namespace ittech24.cmd
 {
@@ -266,18 +266,18 @@ namespace ittech24.cmd
             WriteLine($"SignDataBase64: {signDataBase64}");
             string token = payload + "." + signDataBase64;
             WriteLine($"Token: {token}");
-            JWTClaim claim = new JWTClaim
+            JsonWebTokenClaim claim = new JsonWebTokenClaim
             {
                 Audience = "Test1",
-                JWTId = Guid.NewGuid().ToString(),
+                JsonWebTokenId = Guid.NewGuid().ToString(),
                 IssuedAt = (int)DateTimeExtensions.Timestamp(DateTime.Now)
             };
             claim.ExtraProperties.Add("https://test.aptbacs.co.uk", "testing");
             string claimJson = claim.ToJson();
             WriteLine($"claim example: { claimJson}");
             WriteLine("***** Using Tokens *****");
-            JWToken jwt = new JWToken();
-            JWTClaim jwtclaim = new JWTClaim
+            JsonWebToken jwt = new JsonWebToken();
+            JsonWebTokenClaim jwtclaim = new JsonWebTokenClaim
             {
                 Subject = "1234567890",
                 Expiration = 1516239022,
@@ -289,7 +289,7 @@ namespace ittech24.cmd
             jwt.Sign(JWTAlgorithm.HS384);
             WriteLine($"Token: {jwt.Token}");
             jwt.Verify();
-            JWToken testToken = new JWToken();
+            JsonWebToken testToken = new JsonWebToken();
             Write("Please type in token: ");
             testToken.Token = ReadLine();
             WriteLine();

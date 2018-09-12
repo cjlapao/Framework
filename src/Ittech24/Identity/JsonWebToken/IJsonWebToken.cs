@@ -1,8 +1,8 @@
 using System.Security.Cryptography.X509Certificates;
 
-namespace Ittech24.Identity.JWT
+namespace Ittech24.Identity.JsonWebToken
 {
-    public interface IJWToken
+    public interface IJsonWebToken
     {
         JoseHeader Header { get; set; }
         object Payload { get; set; }

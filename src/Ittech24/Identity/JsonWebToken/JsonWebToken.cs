@@ -7,28 +7,44 @@ using System.Security.Cryptography.X509Certificates;
 using System.IO;
 using Newtonsoft.Json;
 using Ittech24.Extensions;
+using System.Runtime.Serialization;
 
 namespace Ittech24.Identity.JsonWebToken 
 {
+    [DataContract]
+    public enum JoseHeaderType
+    {
+        [DataMember(Name = "alg")]
+        Algorithm,
+        [DataMember(Name = "typ")]
+        Type,
+        Kid
+    }
     public class JsonWebToken : IJsonWebToken
     {
         private IJsonSerializer jsonSerializer = new DefaultJsonSerializer();
         private JoseHeader _joseHeader;
 
-        public JWTAlgorithm Algorithm {get;set;} = JWTAlgorithm.HS256;
-        public JoseHeader Header
+        public JWTAlgorithm Algorithm
         {
             get
             {
-                if (_joseHeader != null)
-                    Algorithm = _joseHeader.Algorithm;
-                return _joseHeader;
+                if (Header == null)
+                {
+                    Header = new JoseHeader();
+                    Header.Algorithm = JWTAlgorithm.none;
+                }
+                return Header.Algorithm;
             }
             set
             {
-                _joseHeader = value;
+                if (Header == null)
+                    Header = new JoseHeader();
+                Header.Algorithm = value;
             }
         }
+
+        public JoseHeader Header { get; set; }
         public object Payload {get;set;}
         public X509Certificate2 Certificate {get;set;}
         public string Key {get;set;}
@@ -89,30 +105,7 @@ namespace Ittech24.Identity.JsonWebToken
             token.Append(payloadBase64.ToString());
             token.Append(".");
             byte[] payloadBytes = payloadBase64.ToString().GetBytes();
-            byte[] hashedBytes = null;
-            switch (Algorithm)
-            {
-                case JWTAlgorithm.HS256:
-                    HMACSHA256 encHMAC256 = new HMACSHA256(keyBytes);
-                    hashedBytes = encHMAC256.ComputeHash(payloadBytes);
-                    Signature = hashedBytes.Base64UrlEncode();
-                    break;
-                case JWTAlgorithm.HS384:
-                    HMACSHA384 encHMAC384 = new HMACSHA384(keyBytes);
-                    hashedBytes = encHMAC384.ComputeHash(payloadBytes);
-                    Signature = hashedBytes.Base64UrlEncode();
-                    break;
-                case JWTAlgorithm.HS512:
-                    HMACSHA512 encHMAC512 = new HMACSHA512(keyBytes);
-                    hashedBytes = encHMAC512.ComputeHash(payloadBytes);
-                    Signature = hashedBytes.Base64UrlEncode();
-                    break;
-                default:
-                    // temporary impementation of a default encryption
-                    Algorithm = JWTAlgorithm.HS256;
-                    BuildJoseHeader();
-                    goto case JWTAlgorithm.HS256;
-            }
+            Signature = HashSignature(Algorithm, keyBytes, payloadBytes).Base64UrlEncode();
             token.Append(Signature);
             Token = token.ToString();
         }
@@ -139,7 +132,7 @@ namespace Ittech24.Identity.JsonWebToken
             string headerJson = parts[0].Base64UrlDecode().GetString();
             string payloadJson = parts[1].Base64UrlDecode().GetString();
             string signatureJson = parts[2].Base64UrlDecode().GetString();
-
+        
             JsonWebToken token = new JsonWebToken();
             token.Key = Key;
 
@@ -152,11 +145,11 @@ namespace Ittech24.Identity.JsonWebToken
             if (testClaim != null)
                 token.Payload = testClaim;
             else
-                token.Payload = payloadJson;
-            Dictionary<string, object> test1 = jsonSerializer.Deserialize<Dictionary<string, object>>(payloadJson);
-            token.Payload = test1;
-            token.Sign();
-            if (token.Signature == parts[2])
+                token.Payload = jsonSerializer.Deserialize<Dictionary<string, object>>(payloadJson);
+
+            string signatureDecoded = HashSignature(token.Algorithm,token.Key.GetBytes(),$"{parts[0]}.{parts[1]}".GetBytes()).Base64UrlEncode();
+
+            if (signatureDecoded == parts[2])
                 return true;
             return false;
         }
@@ -169,6 +162,32 @@ namespace Ittech24.Identity.JsonWebToken
                 Header.KeyId = Certificate.SerialNumber;
             }
             return Header;
+        }
+
+        private byte[] HashSignature(JWTAlgorithm algorithm, byte[] keyBytes, byte[] payloadBytes)
+        {
+            byte[] hashedBytes = null;
+            switch (algorithm)
+            {
+                case JWTAlgorithm.HS256:
+                    HMACSHA256 encHMAC256 = new HMACSHA256(keyBytes);
+                    hashedBytes = encHMAC256.ComputeHash(payloadBytes);
+                    break;
+                case JWTAlgorithm.HS384:
+                    HMACSHA384 encHMAC384 = new HMACSHA384(keyBytes);
+                    hashedBytes = encHMAC384.ComputeHash(payloadBytes);
+                    break;
+                case JWTAlgorithm.HS512:
+                    HMACSHA512 encHMAC512 = new HMACSHA512(keyBytes);
+                    hashedBytes = encHMAC512.ComputeHash(payloadBytes);
+                    break;
+                default:
+                    // temporary impementation of a default encryption
+                    Algorithm = JWTAlgorithm.HS256;
+                    BuildJoseHeader();
+                    goto case JWTAlgorithm.HS256;
+            }
+            return hashedBytes;
         }
     }
 }

@@ -283,12 +283,17 @@ namespace ittech24.cmd
                 Expiration = 1516239022,
             };
             jwtclaim.ExtraProperties.Add("name", "John Doe");
-            jwtclaim.ExtraProperties.Add("Address", "Crawley");
+            //jwtclaim.ExtraProperties.Add("Address", "Crawley");
             jwt.Payload = jwtclaim;
             jwt.Key = "TestKey";
             jwt.Sign(JWTAlgorithm.HS384);
             WriteLine($"Token: {jwt.Token}");
             jwt.Verify();
+            Dictionary<JoseHeaderType, object> test5 = new Dictionary<JoseHeaderType, object>();
+            test5.Add(JoseHeaderType.Algorithm, "HS256");
+            test5.Add(JoseHeaderType.Type, "JWT");
+            string test6 = JsonConvert.SerializeObject(test5);
+            WriteLine($"Test5: {test6}");
             JsonWebToken testToken = new JsonWebToken();
             Write("Please type in token: ");
             testToken.Token = ReadLine();

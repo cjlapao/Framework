@@ -1,0 +1,13 @@
+﻿@mixin loadingPanel-variant($background) {
+    div {
+        background-color: $background;
+    }
+
+    .spinner-before-color {
+        background-color: unset !important;
+    }
+
+    .spinner-before-color:before {
+        background-color: $background;
+    }
+}

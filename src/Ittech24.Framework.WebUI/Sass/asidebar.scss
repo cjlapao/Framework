@@ -1,0 +1,358 @@
+﻿@import 'variables.scss';
+
+.asidebar {
+    min-height: 100vh;
+    display: flex;
+
+    .mainmenu {
+        display: flex;
+        left: 0;
+        width: inherit;
+        z-index: 300;
+        flex-direction: row;
+        flex-shrink: 0;
+        background-color: $asidebar-background;
+        background: url('../../../../img/menu.svg') no-repeat !important;
+        background-size: cover !important;
+        -webkit-transition: .2s;
+        transition: .2s;
+        -webkit-box-shadow: 0 2px 2px 0 rgba(0,0,0,0.14), 0 3px 1px -2px rgba(0,0,0,0.12), 0 1px 5px 0 rgba(0,0,0,0.2);
+        box-shadow: 0 2px 2px 0 rgba(0,0,0,0.14), 0 3px 1px -2px rgba(0,0,0,0.12), 0 1px 5px 0 rgba(0,0,0,0.2);
+    }
+
+    .mainmenu-bar {
+        display: flex;
+        width: 64px;
+        align-content: center;
+        align-items: center;
+        box-sizing: border-box;
+        flex-direction: column;
+        /*padding: 16px 0 6px;*/
+        .header-button {
+            align-items: center;
+            align-content: center;
+            display: flex;
+            flex-direction: column;
+            height: 45px;
+            border-top: unset;
+
+            .button-icon {
+                height: 40px !important;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                font-size: 1.5rem;
+            }
+        }
+
+        .header-button a {
+            color: #fff;
+            width: 100%;
+            text-align: center;
+            font-size: 1.5em;
+        }
+
+        .main-button {
+            color: inherit;
+            background-color: transparent;
+            text-decoration: none;
+            fill: #0747a6;
+            align-items: center;
+            border: none;
+            cursor: pointer;
+            display: flex;
+            width: 100% !important;
+            height: 40px;
+            justify-content: center;
+            margin: 0;
+            padding: 0;
+            outline: none;
+            text-align: center;
+            border-bottom: 1px solid #fafafa;
+
+            .button-text {
+                display: none;
+                flex-grow: 1;
+                text-align: left;
+                padding-left: 16px;
+            }
+
+            .button-icon {
+                width: 40px !important;
+                height: 40px !important;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                font-size: 1.5rem;
+
+                .fa-layers-counter {
+                    font-size: 2.3rem !important;
+                    right: -5px;
+                    top: -5px;
+                }
+
+                .fa-layers-bottom-right {
+                    top: unset;
+                    bottom: -5px;
+                    right: -5px;
+                    left: unset;
+                }
+
+                .fa-layers-bottom-left {
+                    top: unset;
+                    bottom: -5px;
+                    right: unset;
+                    left: -5px;
+                }
+
+                .fa-layers-top-left {
+                    top: -5px;
+                    bottom: -5px;
+                    right: auto;
+                    left: -5px;
+                }
+
+                .fa-layers-text {
+                    font-size: 0.8rem;
+
+                    .sidebar-dark {
+                        color: white;
+                    }
+                }
+            }
+        }
+
+        .main-button a {
+            display: flex;
+            color: #fff;
+            text-decoration: none;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            font-size: 1.2em;
+            width: 100%;
+        }
+
+        .main-button:hover {
+            background-color: #ccc;
+            color: #2f4050;
+
+            .fa-layers-text {
+                color: white !important;
+            }
+        }
+
+        .main-button.active {
+            background-color: #f3f3f4 !important;
+        }
+
+        .main-button.active a {
+            /*color: #999c9e !important;*/
+            cursor: default;
+        }
+    }
+
+    .main-section {
+        flex-shrink: 1;
+        flex-basis: 0;
+        margin: 0;
+        padding: 0;
+        width: 100%;
+    }
+
+    .bottom-section {
+        width: 100%;
+        align-self: center;
+        display: flex;
+        justify-content: flex-end;
+        flex-grow: 1;
+        align-content: center;
+        flex-direction: column;
+
+        .section-body {
+            border-top: 1px solid #fafafa !important;
+        }
+    }
+
+    .section-header {
+        box-sizing: border-box;
+        padding: 8px 0 6px 0;
+    }
+
+    .section-body {
+        display: flex;
+        align-self: center;
+        align-items: center;
+        flex-direction: column;
+        box-sizing: border-box;
+        width: 100%;
+        border-top: 1px solid #fafafa;
+    }
+
+    .submenu {
+        width: 0;
+        margin-top: 50px;
+        background-color: white;
+        overflow-y: auto;
+
+        .section {
+            flex-grow: 1;
+            flex-shrink: 1;
+            flex-basis: 0;
+            margin: 0;
+            padding-top: 5px;
+            width: 100%;
+        }
+
+        .section-body {
+            display: flex;
+            align-self: center;
+            align-items: center;
+            flex-direction: column;
+            box-sizing: border-box;
+            margin-bottom: 15px;
+        }
+
+        .submenu-button {
+            color: #434857;
+            background-color: transparent;
+            fill: #0747a6;
+            align-items: center;
+            border: none;
+            cursor: pointer;
+            display: none;
+            width: 100% !important;
+            height: 40px;
+            justify-content: center;
+            margin: 0;
+            padding: 0;
+            outline: none;
+            text-align: center;
+            text-decoration: none;
+
+            .button-text {
+                display: inherit;
+                flex-grow: 1;
+                text-align: left;
+                /*padding-left: 16px;*/
+            }
+
+            .button-icon {
+                width: 40px !important;
+                height: 40px !important;
+                display: inherit;
+                align-items: center;
+                justify-content: center;
+            }
+        }
+
+        .submenu-button a {
+            display: inherit;
+            text-decoration: none;
+            align-items: center;
+            justify-content: center;
+            color: #434857;
+            text-align: center;
+            font-size: 1.2em;
+            width: 100%;
+        }
+
+        .submenu-button.active {
+            background-color: violet;
+        }
+
+        .submenu-button:hover {
+            background-color: #ccc;
+        }
+    }
+
+    .submenu-content {
+        width: 0;
+        position: fixed;
+        left: 0;
+        height: 100vh;
+        z-index: 1000;
+        background-color: white;
+    }
+
+    .submenu-bar {
+        display: none;
+        align-content: center;
+        align-items: center;
+        background-color: #252830;
+        box-sizing: border-box;
+        flex-direction: column;
+        background-color: white;
+        width: 64px;
+        height: 100vh;
+
+        .button {
+            color: #434857;
+            background-color: transparent;
+            fill: #0747a6;
+            align-items: center;
+            border: none;
+            cursor: pointer;
+            display: flex;
+            width: 100% !important;
+            height: 40px;
+            justify-content: center;
+            margin: 0;
+            margin-top: 5px;
+            padding: 0;
+            outline: none;
+            text-align: center;
+
+            .button-icon {
+                width: 40px !important;
+                height: 40px !important;
+                display: inherit;
+                align-items: center;
+                justify-content: center;
+            }
+
+            .button-icon:hover {
+                background-color: #ccc;
+                border-radius: 50%;
+            }
+        }
+
+        .button a {
+            display: inherit;
+            text-decoration: none;
+            align-items: center;
+            justify-content: center;
+            color: #434857;
+            text-align: center;
+            font-size: 1.2em;
+            width: 100%;
+        }
+    }
+
+    .fill {
+        flex-grow: 1;
+    }
+}
+
+body.fixed-sidebar {
+
+	.static-asidebar {
+		position: fixed;
+		z-index: 2001;
+		height: 100%;
+	}
+}
+
+.submenufade {
+    display: none;
+    background-color: rgba(0,0,0,0.5);
+    width: 100vw;
+    height: 100vh;
+    position: fixed;
+    top: 0;
+    left: 0;
+}
+
+.sidebar-dark {
+    color: white !important;
+}

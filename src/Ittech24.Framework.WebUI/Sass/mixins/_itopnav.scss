@@ -1,0 +1,31 @@
+﻿@mixin itopnav-link-variant($color, $active: darken($color, 10%)) {
+    @include color-yiq($color);
+    color: $color;
+
+    &:hover {
+        @include color-yiq($color);
+        color: $active;
+    }
+    // Disabled comes first so active can properly restyle
+    &.disabled,
+    &:disabled {
+        @include color-yiq($color);
+        color: lighten($color, 10%);
+    }
+
+    &:active,
+    &.active,
+    .show > &.dropdown-toggle {
+        @include color-yiq($color);
+        color: $active;
+    }
+}
+
+@mixin itopnav-variant($color, $active: darken($color, 10%)) {
+    @include color-yiq($color);
+    background-color: $color;
+    border-bottom: 1px solid $active;
+    a.itopnav-link{
+        color: lighten($color, 50%);
+    }
+}

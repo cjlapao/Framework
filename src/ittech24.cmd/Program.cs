@@ -1,13 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Net.Http;
-using Ittech24.OAuth;
-using Ittech24.Extensions;
+using Ittech24.Framework.OAuth;
+using Ittech24.Framework.Extensions;
 using System.Security.Cryptography;
 using System.Text;
 using Newtonsoft.Json;
 using static System.Console;
-using Ittech24.Identity.JsonWebToken;
+using Ittech24.Framework.Identity.JsonWebToken;
+using System.Threading.Tasks;
 
 namespace ittech24.cmd
 {
@@ -15,7 +16,10 @@ namespace ittech24.cmd
     {
         static void Main(string[] args)
         {
-            GenerateJWS(string.Empty);
+            Task.Run(() =>
+            {
+                GenerateJWS(string.Empty);
+            }).Wait();
             ReadLine();
             var commands = ReadCommands(args);
             if (commands.Contains("sign"))
@@ -183,7 +187,7 @@ namespace ittech24.cmd
             token.Query.Add("file", "vacation.jpg");
             token.Url = new Uri("http://photos.example.net/photos");
             token.Sign();
-            Console.Write("Normal signature: " + Ittech24.OAuth.Signature.Generate(HttpMethod.Get, url, "kd94hf93k423kf44", param, "pfkkdhi9sl3r4s00")+"\r\n");
+            Console.Write("Normal signature: " + Ittech24.Framework.OAuth.Signature.Generate(HttpMethod.Get, url, "kd94hf93k423kf44", param, "pfkkdhi9sl3r4s00")+"\r\n");
             Console.Write("Token signature: " + token.Signature);
         }
 
@@ -231,77 +235,34 @@ namespace ittech24.cmd
             }
         }
 
-        static void GenerateJWS(string body)
+        static async void GenerateJWS(string body)
         {
-            string alg = "HS512";
-            string typ = "JWT";
-            var jose = new { alg, typ };
-            string joseJson = JsonConvert.SerializeObject(jose);
-            var data = new
-            {
-                sub = "12345",
-                name = "Test44444",
-                iat = "54321"
-            };
-            JoseHeader heade = new JoseHeader
-            {
-                Algorithm = JWTAlgorithm.HS512,
-                Type = JWTType.JWS
-            };
-            string test = heade.ToJson();
-            WriteLine($"test: {test}");
-            string dataJson = JsonConvert.SerializeObject(data);
-            string joseBase64 = joseJson.Base64UrlEncode();
-            WriteLine($"Base64 JOSE: {joseBase64}");
-            string dataBase64 = dataJson.Base64UrlEncode();
-            WriteLine($"Base64 Data: {dataBase64}");
-            string payload = joseBase64 + "." + dataBase64;
-            WriteLine($"Payload: {payload}");
-            byte[] payloadBytes = Encoding.UTF8.GetBytes(payload);
-            HMACSHA512 crypto = new HMACSHA512(Encoding.Default.GetBytes("TestKey"));
-            byte[] signDataBytes = crypto.ComputeHash(payloadBytes);
-            string signData = Encoding.UTF8.GetString(signDataBytes);
-            WriteLine($"SignData: {signData}");
-            string signDataBase64 = signDataBytes.Base64UrlEncode();
-            WriteLine($"SignDataBase64: {signDataBase64}");
-            string token = payload + "." + signDataBase64;
-            WriteLine($"Token: {token}");
-            JsonWebTokenClaim claim = new JsonWebTokenClaim
-            {
-                Audience = "Test1",
-                JsonWebTokenId = Guid.NewGuid().ToString(),
-                IssuedAt = (int)DateTimeExtensions.Timestamp(DateTime.Now)
-            };
-            claim.ExtraProperties.Add("https://test.aptbacs.co.uk", "testing");
-            string claimJson = claim.ToJson();
-            WriteLine($"claim example: { claimJson}");
-            WriteLine("***** Using Tokens *****");
-            JsonWebToken jwt = new JsonWebToken();
-            JsonWebTokenClaim jwtclaim = new JsonWebTokenClaim
-            {
-                Subject = "1234567890",
-                Expiration = 1516239022,
-            };
-            jwtclaim.ExtraProperties.Add("name", "John Doe");
-            //jwtclaim.ExtraProperties.Add("Address", "Crawley");
-            jwt.Payload = jwtclaim;
-            jwt.Key = "TestKey";
-            jwt.Sign(JWTAlgorithm.HS384);
-            WriteLine($"Token: {jwt.Token}");
-            jwt.Verify();
-            Dictionary<JoseHeaderType, object> test5 = new Dictionary<JoseHeaderType, object>();
-            test5.Add(JoseHeaderType.Algorithm, "HS256");
-            test5.Add(JoseHeaderType.Type, "JWT");
-            string test6 = JsonConvert.SerializeObject(test5);
-            WriteLine($"Test5: {test6}");
             JsonWebToken testToken = new JsonWebToken();
             Write("Please type in token: ");
             testToken.Token = ReadLine();
             WriteLine();
             Write("Please type in Password for token: ");
             testToken.Key = ReadLine();
+            await testToken.DecodeAsync();
+            WriteLine($"Decoded Jose Header: {testToken.RawHeader}");
+            WriteLine($"Decoded Payload: {testToken.RawPayload}");
+            WriteLine($"Payload: {((testToken.Payload is JsonWebTokenClaim) ? (testToken.Payload as JsonWebTokenClaim).ToJson() : testToken.Payload.ToString())}");
+            WriteLine($"Issued at decoded: {((testToken.Payload is JsonWebTokenClaim) ? (testToken.Payload as JsonWebTokenClaim).IssuedAt : DateTime.MinValue)}");
             WriteLine($"Result: {testToken.Verify()}");
-
+            WriteLine($"Static verify: {JsonWebToken.Verify(testToken.Token, testToken.Key)}");
+            JsonWebToken newToken = new JsonWebToken();
+            newToken.Algorithm = JWTAlgorithm.HS512;
+            newToken.Header.KeyId = Guid.NewGuid().ToString();
+            var payload = new
+            {
+                Test = "This is a default string",
+                Obj = new { sub1 = "this is the sub1", sub2 = 4 },
+                Date = DateTime.Now
+            };
+            newToken.Payload = payload;
+            newToken.Key = "TestKey";
+            await newToken.EncodeAsync();
+            WriteLine($"Token: {newToken.Token}");
             Console.ReadLine();
         }
     }

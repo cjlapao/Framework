@@ -1,0 +1,36 @@
+﻿@mixin float-button-variant($color, $active-background: darken($color, 7.5%), $active-border: darken($color, 10%)) {
+    .float-bar-btn {
+        @include color-yiq($color);
+        background-color: $color;
+        border-color: darken($color,12%);
+
+        &:hover {
+            @include color-yiq($color);
+            background-color: $active-background;
+            border-color: $active-border;
+        }
+
+        &:focus,
+        &.focus {
+        }
+    }
+
+    .float-bar-icons li,
+    .float-bar-icons a {
+        color: $color;
+
+        &:hover {
+           color: $active-background;
+        }
+
+        &:focus,
+        &.focus {
+        }
+    }
+}
+
+@mixin float-bar-uppercase($enable) {
+    @if $enable {
+        text-transform: uppercase;
+    }
+}

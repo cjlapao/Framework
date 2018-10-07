@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
-using Ittech24.Extensions;
-using Ittech24.OAuth;
+using Ittech24.Framework.Extensions;
+using Ittech24.Framework.OAuth;
 using System.Net.Http;
 using System.Threading.Tasks;
 
@@ -37,7 +37,7 @@ namespace ittech24.cmd
                 Callback = callback
             };
             token.Sign();
-            var request = new Ittech24.OAuth.RequestToken(token);
+            var request = new Ittech24.Framework.OAuth.RequestToken(token);
             return await request.SendAsync();
         }
     }
@@ -67,7 +67,7 @@ namespace ittech24.cmd
                 Callback = requestToken.Callback
             };
             token.Sign();
-            var access = new Ittech24.OAuth.AuthorizationToken(token);
+            var access = new Ittech24.Framework.OAuth.AuthorizationToken(token);
             return await access.SendAsync();
         }
     }
@@ -92,7 +92,7 @@ namespace ittech24.cmd
             token.Url = url;
             token.Verifier = verifier;
             token.Sign();
-            var access = new Ittech24.OAuth.AccessToken(token);
+            var access = new Ittech24.Framework.OAuth.AccessToken(token);
             return await access.SendAsync();
         }
     }

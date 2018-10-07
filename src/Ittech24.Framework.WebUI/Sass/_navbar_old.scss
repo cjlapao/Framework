@@ -1,0 +1,47 @@
+﻿.inavbar {
+	width: 100%;
+	left: 0;
+	right: 0;
+	font-size: 0.92857rem;
+	z-index: 101;
+	position: relative;
+	display: flex;
+	flex-direction: column;
+
+	img {
+		padding-left: 25px !important;
+		padding-top: 25px !important;
+		padding-bottom: 25px !important;
+	}
+
+	.inavbar-row {
+		display: flex;
+	}
+
+	.inav-menu {
+		display: flex;
+		flex-grow: 1;
+		justify-content: flex-end;
+		align-items: center;
+	}
+
+	.inav-btn {
+		color: #fff;
+		font-size: 16px;
+		font-weight: 500;
+		padding: 12px 18px !important;
+	}
+
+	.inav-btn button:hover,
+	.inav-btn button:active {
+		color: #fff;
+		border-bottom: 2px solid #fff;
+		border-radius: 0;
+	}
+}
+
+.isticky-top {
+	position: fixed;
+	top: 0;
+	bottom: auto;
+}

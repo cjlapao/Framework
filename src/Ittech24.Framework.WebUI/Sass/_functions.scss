@@ -1,0 +1,28 @@
+﻿@mixin color-yiq($color) {
+    $r: red($color);
+    $g: green($color);
+    $b: blue($color);
+
+    $yiq: (($r * 299) + ($g * 587) + ($b * 114)) / 1000;
+
+    @if ($yiq >= 160) {
+        color: #111;
+    }
+    @else {
+        color: #fff;
+    }
+}
+
+@mixin box-shadow($shadow...) {
+    @if $enable-shadows {
+        box-shadow: $shadow;
+    }
+}
+
+@function color($key: "teal") {
+    @return map-get($colors, $key);
+}
+
+@function theme-color($key: "skyblue") {
+    @return map-get($theme-colors, $key);
+}

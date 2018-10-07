@@ -1,0 +1,162 @@
+﻿html {
+    height: 100vh;
+}
+
+body {
+    font-weight: 400;
+    font-size: 1rem;
+    font-family: "Open Sans", Helvetica, Arial, sans-serif;
+    line-height: 1.6;
+    color: #464c5e;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    -moz-font-feature-settings: "liga", "kern";
+    text-rendering: optimizelegibility;
+    background-color: #fff !important;
+
+    &.itopnav-sticky {
+        .itopnav {
+            align-items: flex-start;
+            justify-content: center;
+            flex-direction: column;
+            position: fixed;
+            top: 0;
+            left: 0;
+        }
+
+        .page {
+            top: $iTopnav-height;
+            left: 0;
+            position: fixed;
+            max-height: calc(100% - #{$iTopnav-height});
+
+            .isidebar-flexy-content {
+                height: calc(100% - #{$iTopnav-height}) !important;
+
+                .isidebar-content {
+                    height: initial !important;
+                }
+            }
+
+            .isidebar-content {
+                height: calc(100% - #{$iTopnav-height}) !important;
+            }
+        }
+    }
+}
+.page {
+    display: flex;
+    max-height: 100%;
+    min-width: 100%;
+    background: transparent;
+    overflow: auto;
+    background-color: $page-background;
+}
+
+.outer-container {
+    display: flex;
+    flex: 1 1 auto;
+    min-width: fit-content;
+
+    .topnav-sticky {
+        padding-top: 65px;
+    }
+}
+
+.main-canvas {
+    position: relative;
+    padding: 0;
+    order: 2;
+    height: 100vh;
+    flex: 1 1 auto;
+    padding: 2px;
+}
+
+.icon {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    margin-right: .5rem;
+}
+
+/* Asp.Net Validation class override */
+.validation-summary-valid {
+	display: none;
+}
+
+.validation-summary-errors {
+	display: block;
+	color: #721c24;
+	background-color: #f8d7da;
+	border-color: #f5c6cb;
+
+	ul{
+		list-style: none;
+	}
+}
+
+.field-validation-error {
+	color: #721c24;
+}
+
+.fade-background {
+	width: 100vw;
+	height: 100vh;
+	position: absolute;
+	left: 0;
+	top: 0;
+    overflow: hidden;
+	background-color: rgba(0,0,0,0.7);
+}
+
+.bg-transparent {
+	background-color: transparent !important;
+}
+.bg-opacity-01 {
+	background-color: rgba(0, 0, 0, 0.1) !important;
+}
+.bg-opacity-05 {
+	background-color: rgba(0, 0, 0, 0.5) !important;
+}
+.bg-opacity-07 {
+	background-color: rgba(0, 0, 0, 0.7) !important;
+}
+
+.bg-white-solid{
+	background-color: rgb(255,255,255) !important;
+}
+
+.shadow-v1 {
+	box-shadow: 0 5px 10px -6px rgba(0, 0, 0, 0.1);
+}
+
+.shadow-v2 {
+	box-shadow: 0 5px 10px -6px rgba(0, 0, 0, 0.2);
+}
+
+.shadow-v3 {
+	box-shadow: 0 5px 10px -6px rgba(0, 0, 0, 0.3);
+}
+
+.shadow-v4 {
+	box-shadow: 0 5px 10px -6px rgba(0, 0, 0, 0.4);
+}
+
+.shadow-v5 {
+	box-shadow: 0 5px 10px -6px rgba(0, 0, 0, 0.5);
+}
+
+/*Development styles*/
+.developmentTag {
+    color: white;
+    background-color: rgba(255, 0, 0, 0.2);
+    position: fixed;
+    padding: 5px;
+    /*left: calc(100% -115px);
+    top: calc(100% -30px);*/
+    bottom: 10px;
+    right: 10px;
+    z-index: 1003;
+    border-radius: 3px;
+    font-size: 0.6rem;
+}
